@@ -1,6 +1,14 @@
-console.log("Welcome to Hell:)");
-
 const contacts = require("./contacts");
+
+const { Command } = require("commander");
+const program = new Command();
+
+program
+  .option("-a, --action <type>", "choose action")
+  .option("-i, --id <type>", "user id")
+  .option("-n, --name <type>", "user name")
+  .option("-e, --email <type>", "user email")
+  .option("-p, --phone <type>", "user phone");
 
 const invokeAction = async ({ action, id, name, email, phone }) => {
   switch (action) {
@@ -24,6 +32,8 @@ const invokeAction = async ({ action, id, name, email, phone }) => {
     case "remove":
       const removedContact = await contacts.removeContact(id);
       return console.log(removedContact);
+    default:
+      console.warn("\x1B[31m Unknown action type!");
   }
 };
 
@@ -45,3 +55,23 @@ const invokeAction = async ({ action, id, name, email, phone }) => {
 // });
 
 // invokeAction({ action: "remove", id: "fXVzsS99gLMi-RtdVXnjT" });
+
+// const actionIndex = process.argv.indexOf("--action");
+// console.log(actionIndex);
+
+// if (actionIndex !== -1) {
+//   const action = process.argv[actionIndex + 1];
+//   invokeAction({ action });
+//   console.log(action);
+// }
+
+// const arr = hideBin(process.argv);
+// const { argv } = yargs(arr);
+// console.log(argv);
+
+// invokeAction(argv);
+
+program.parse(process.argv);
+const argv = program.opts();
+
+invokeAction(argv);
